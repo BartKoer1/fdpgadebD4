@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <title>For deg \</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ffe6f2, #ffccdd);
+            font-family: 'Georgia', serif;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+        
+        .valentine-card {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(255, 105, 180, 0.2);
+            border: 5px solid #ffb6c1;
+            overflow: hidden;
+        }
+        
+        .header {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .smile {
+            font-size: 60px;
+            margin-bottom: 10px;
+            animation: smileFloat 4s ease-in-out infinite;
+        }
+        
+        h1 {
+            color: #ff6699;
+            font-size: 2.8em;
+            font-weight: normal;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #ff99bb;
+            font-size: 1.3em;
+            font-style: italic;
+        }
+        
+        .message-box {
+            background: linear-gradient(135deg, #fff5f8, #fff0f5);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 25px 0;
+            border: 2px solid #ffccdd;
+            position: relative;
+        }
+        
+        .message-box:before {
+            content: "💝";
+            position: absolute;
+            left: -15px;
+            top: -15px;
+            font-size: 2em;
+            background: white;
+            border-radius: 50%;
+            padding: 10px;
+            border: 2px solid #ffb6c1;
+        }
+        
+        .message-text {
+            font-size: 1.5em;
+            line-height: 1.8;
+            color: #663344;
+            text-align: left;
+            padding-left: 20px;
+            border-left: 3px solid #ff99bb;
+        }
+        
+        .highlight {
+            color: #ff3366;
+            font-weight: bold;
+            background: #fff0f5;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-size: 1.1em;
+        }
+        
+        
+        .cipher-section {
+            background: #f9f0ff;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 3px solid #d4a5ff;
+            box-shadow: inset 0 0 20px rgba(212, 165, 255, 0.2);
+        }
+        
+        .cipher-title {
+            color: #9966cc;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .cipher-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .cipher-display {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.3em;
+            color: #663399;
+            border: 2px dashed #cc99ff;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cipher-text {
+            letter-spacing: 3px;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .decoded-text {
+            color: #ff3366;
+            font-size: 1.8em;
+            font-weight: bold;
+            display: none;
+            animation: fadeIn 1s ease;
+        }
+        
+        .cipher-hint {
+            font-size: 1.1em;
+            color: #9966cc;
+            background: #f0e6ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #9966cc;
+        }
+        
+        /* Кнопки и управление */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .cipher-btn {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #9966cc, #cc99ff);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 5px 15px rgba(153, 102, 204, 0.3);
+        }
+        
+        .cipher-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(153, 102, 204, 0.4);
+        }
+        
+        .cipher-btn:active {
+            transform: translateY(-2px);
+        }
+        
+        .reveal-btn {
+            background: linear-gradient(135deg, #ff6699, #ff99bb);
+        }
+        
+        .hint-btn {
+            background: linear-gradient(135deg, #66cc99, #99ffcc);
+        }
+        
+        
+        .secret-section {
+            display: none;
+            background: linear-gradient(135deg, #fff0f6, #ffe6f0);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 30px 0;
+            animation: fadeIn 1s ease;
+            position: relative;
+            text-align: center;
+        }
+        
+        .secret-message {
+            font-size: 2em;
+            color: #ff3366;
+            margin: 20px 0;
+            padding: 20px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+        
+        .simple-note {
+            font-size: 1.2em;
+            color: #9966cc;
+            margin-top: 20px;
+            font-style: italic;
+            line-height: 1.6;
+        }
+        
+       
+        .decode-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .decode-text {
+            font-size: 2em;
+            color: #ff6699;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            width: 300px;
+            height: 10px;
+            background: #ffccdd;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6699, #ff3366);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .heart-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .heart-particle {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0;
+            animation: floatUp 2s linear forwards;
+        }
+        
+        /* Анимации */
+        @keyframes smileFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(-5deg); }
+            75% { transform: translateY(-5px) rotate(5deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes floatUp {
+            0% { transform: translateY(100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        
+        .floating-hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+        
+        .floating-heart {
+            position: absolute;
+            font-size: 20px;
+            color: #ffb6c1;
+            opacity: 0.5;
+            animation: floatUp 8s linear infinite;
+        }
+        
+        
+        .signature {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px dashed #ffccdd;
+            color: #ff99bb;
+            font-size: 1.2em;
+            font-style: italic;
+        }
+        
+       
+        @media (max-width: 600px) {
+            .valentine-card {
+                padding: 25px 20px;
+                border-width: 3px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .message-text {
+                font-size: 1.3em;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cipher-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+            
+            .secret-message {
+                font-size: 1.8em;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="valentine-card">
+        
+        <div class="floating-hearts" id="floatingHearts"></div>
+        
+       
+        <div class="header">
+            <div class="smile">😊</div>
+            <h1>Til den søteste personen</h1>
+            <div class="subtitle">Smilet ditt lyser opp dagen</div>
+        </div>
+        
+        
+        <div class="message-box">
+            <div class="message-text">
+                <p>Vet du, når du smiler,</p>
+                <p>blir verden <span class="highlight">varmere og lysere</span></p>
+                <p>Smilet ditt er som en solstråle på en skyet dag.</p>
+                <p style="margin-top: 15px;">Og jeg ville si deg noe viktig,</p>
+                <p>men du må å <span class="highlight">tyde det</span>...</p>
+            </div>
+        </div>
+        
+        
+        <div class="cipher-section">
+            <div class="cipher-title">
+                <span>🔐</span> Kryptert melding
+            </div>
+            
+            <div class="cipher-container">
+                <div class="cipher-display" id="cipherDisplay">
+                    <div class="cipher-text" id="cipherText">
+                        10 5 7 · 12 9 11 5 18 · 4 5 7
+                    </div>
+                    <div class="decoded-text" id="decodedText">
+                        Jeg liker deg 💖
+                    </div>
+                </div>
+                
+                <div class="cipher-hint" id="hintText" style="display: none;">
+                    💡 Hint: Hvert tall er plasseringen til en bokstav i alfabetet.
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="cipher-btn reveal-btn" id="revealBtn">
+                    <span>🔓</span> Dekrypter
+                </button>
+                <button class="cipher-btn hint-btn" id="hintBtn">
+                    <span>💡</span> Vis hint
+                </button>
+            </div>
+        </div>
+        
+        
+        <div class="secret-section" id="secretSection">
+            <div class="secret-message">
+                Takk for smilet ditt ❤️
+            </div>
+        </div>
+        
+    </div>
+    
+    
+    <div class="decode-animation" id="decodeAnimation">
+        <div class="decode-text" id="decodeMessage">Dekrypterer...</div>
+        <div class="progress-bar">
+            <div class="progress" id="decodeProgress"></div>
+        </div>
+        <div class="heart-particles" id="heartParticles"></div>
+    </div>
+
+    <script>
+        
+        const cipher = [10, 5, 7, 12, 9, 11, 5, 18, 4, 5, 7];
+        
+        
+        const cipherDisplay = document.getElementById('cipherDisplay');
+        const cipherText = document.getElementById('cipherText');
+        const decodedText = document.getElementById('decodedText');
+        const hintText = document.getElementById('hintText');
+        const secretSection = document.getElementById('secretSection');
+        const revealBtn = document.getElementById('revealBtn');
+        const hintBtn = document.getElementById('hintBtn');
+        const decodeAnimation = document.getElementById('decodeAnimation');
+        const decodeProgress = document.getElementById('decodeProgress');
+        const decodeMessage = document.getElementById('decodeMessage');
+        const heartParticles = document.getElementById('heartParticles');
+        const floatingHearts = document.getElementById('floatingHearts');
+        
+        
+        function createFloatingHearts() {
+            const heartTypes = ['💖', '💗', '💓', '💞', '💕'];
+            
+            for (let i = 0; i < 12; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.textContent = heartTypes[Math.floor(Math.random() * heartTypes.length)];
+                
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                heart.style.animationDuration = (Math.random() * 8 + 6) + 's';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                heart.style.opacity = Math.random() * 0.3 + 0.2;
+                
+                floatingHearts.appendChild(heart);
+            }
+        }
+        
+       
+        function createHeartParticles(count = 20) {
+            const heartTypes = ['💖', '💗', '💓', '💞', '💕', '💘'];
+            
+            for (let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'heart-particle';
+                particle.textContent = heartTypes[Math.floor(Math.random() * heartTypes.length)];
+                
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.fontSize = (Math.random() * 30 + 20) + 'px';
+                particle.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+                particle.style.animationDelay = Math.random() * 0.5 + 's';
+                
+                heartParticles.appendChild(particle);
+                
+                
+                setTimeout(() => {
+                    particle.remove();
+                }, 2000);
+            }
+        }
+        
+        
+        function showDecodeAnimation() {
+            decodeAnimation.style.display = 'flex';
+            decodeProgress.style.width = '0%';
+            decodeMessage.textContent = "Dekrypterer...";
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 20;
+                
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    decodeProgress.style.width = '100%';
+                    
+                    
+                    createHeartParticles(25);
+                    
+                    
+                    setTimeout(() => {
+                        decodeAnimation.style.display = 'none';
+                        showDecodedMessage();
+                    }, 800);
+                }
+                
+                decodeProgress.style.width = progress + '%';
+            }, 100);
+        }
+        
+        
+        function showDecodedMessage() {
+            cipherText.style.display = 'none';
+            decodedText.style.display = 'block';
+            secretSection.style.display = 'block';
+            revealBtn.style.display = 'none';
+            hintBtn.style.display = 'none';
+            
+           
+            secretSection.style.animation = 'none';
+            setTimeout(() => {
+                secretSection.style.animation = 'fadeIn 1s ease';
+            }, 10);
+            
+           
+            createHeartParticles(10);
+            
+            
+            cipherDisplay.style.background = 'linear-gradient(135deg, #fff0f6, #ffe6f0)';
+            cipherDisplay.style.borderColor = '#ff99bb';
+            cipherDisplay.style.borderStyle = 'solid';
+        }
+        
+       
+        function showHint() {
+            hintText.style.display = 'block';
+            hintBtn.style.display = 'none';
+            
+           
+            hintText.style.animation = 'none';
+            setTimeout(() => {
+                hintText.style.animation = 'fadeIn 0.8s ease';
+            }, 10);
+            
+            
+            createHeartParticles(3);
+        }
+        
+        
+        revealBtn.addEventListener('click', showDecodeAnimation);
+        
+        hintBtn.addEventListener('click', showHint);
+        
+       
+        cipherDisplay.addEventListener('click', function() {
+            if (!hintText.style.display || hintText.style.display === 'none') {
+                showHint();
+            }
+        });
+        
+        
+        cipherDisplay.addEventListener('dblclick', function() {
+            if (cipherText.style.display !== 'none') {
+                showDecodeAnimation();
+            }
+        });
+        
+        
+        setTimeout(() => {
+            if (cipherText.style.display !== 'none' && !hintText.style.display) {
+                hintText.innerHTML = '💡 Trykk på "Vis hint"-knappen';
+                hintText.style.display = 'block';
+                hintText.style.opacity = '0.7';
+                hintText.style.transition = 'opacity 2s';
+                
+                setTimeout(() => {
+                    hintText.style.opacity = '1';
+                }, 100);
+            }
+        }, 10000);
+        
+       
+        const smileElement = document.querySelector('.smile');
+        smileElement.addEventListener('click', function() {
+            if (cipherText.style.display !== 'none') {
+                showDecodeAnimation();
+                
+             
+                this.style.animation = 'none';
+                setTimeout(() => {
+                    this.style.animation = 'smileFloat 4s ease-in-out infinite';
+                }, 10);
+            }
+        });
+        
+     
+        smileElement.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.2) rotate(10deg)';
+            this.style.transition = 'transform 0.3s ease';
+            
+        
+            createHeartParticles(5);
+        });
+        
+        smileElement.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1) rotate(0deg)';
+        });
+        
+        
+        let secretCode = '';
+        document.addEventListener('keypress', function(e) {
+            secretCode += e.key.toLowerCase();
+            
+            if (secretCode.includes('elsker')) {
+                if (cipherText.style.display !== 'none') {
+                    showDecodeAnimation();
+                    createHeartParticles(30);
+                }
+                secretCode = '';
+            }
+            
+            if (secretCode.length > 6) {
+                secretCode = secretCode.slice(-6);
+            }
+        });
+       
+        window.onload = function() {
+            createFloatingHearts();
+        };
+    </script>
+</body>
+</html>
